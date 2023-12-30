@@ -20,10 +20,10 @@ const Menu = ({ menusignedin}: Props) => {
     UserDataService.stillSigned()
       .then((response) => {
         console.log("STILLDIGNED:\n" + response.data);
-        setisuserEmpty(0)
+        setisuserEmpty(1)
       })
       .catch((e) => {
-        setisuserEmpty(0);
+        setisuserEmpty(1);
         user?.setUser({});
         console.log("STILLDIGNED:\n" + e);
         localStorage.setItem("signedin", "false");
