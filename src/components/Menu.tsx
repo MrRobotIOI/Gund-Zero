@@ -23,7 +23,7 @@ const Menu = ({ menusignedin}: Props) => {
         setisuserEmpty(0)
       })
       .catch((e) => {
-        setisuserEmpty(1);
+        setisuserEmpty(0);
         user?.setUser({});
         console.log("STILLDIGNED:\n" + e);
         localStorage.setItem("signedin", "false");
