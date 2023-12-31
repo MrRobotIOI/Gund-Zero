@@ -34,8 +34,9 @@ const login = () => {
   useEffect(() => {
     setLoading(true);
     setSignedIn(localStorage.getItem("signedin") || false);
-    UserDataService.stillSigned()
+    UserDataService.stillSigned(sessionStorage.getItem("token"))
       .then((response) => {
+        sessionStorage.setItem("token",response.data.token)
         console.log("stillSigned()");
         setLoading(false);
         console.log(response.data);
@@ -73,37 +74,15 @@ const login = () => {
     setLoading(true);
     UserDataService.auth(username, password)
       .then((response) => {
-        console.log("Here");
+      
         setErrMsg2("Authenticated");
-        http
-          .get("/username/" + `${username}`)
-          .then((response) => {
-            console.log("Succeseful login");
+        sessionStorage.setItem("token", response.data.token)
 
-            localStorage.setItem("username", "");
-            user?.setUser(response.data);
-
-            localStorage.setItem("signedin", "true");
-
-            /**
-             * IMPORTANT
-             * change the data being sent to id and name or username
-             * UPDATE
-             * Technically speaking there is no need to strore any user data at all
-             * The server has ther req.session.passport.user which is
-             * the user stored in a cookie
-             */
-            localStorage.setItem("userData", JSON.stringify(response.data));
-
-            setSignedIn("true");
-            setLoading(false);
-            navigate(-1);
-          })
-          .catch((e) => {
-            setLoading(false);
-            console.log(e);
-            setErrMsg("Wrong Username or Password");
-          });
+        setSignedIn("true");
+        setLoading(false);
+        navigate(-1);
+       
+          
       })
       .catch((error) => {
         setLoading(false);
@@ -118,6 +97,7 @@ const login = () => {
         setErrMsg2("Authenticated");
         navigate(-1);
         console.log(response);
+        sessionStorage.setItem("token", response.data.token);
       })
       .catch((error) => {
         setLoading(false);
@@ -166,12 +146,11 @@ const login = () => {
               <div></div>
             )}
             <p style={{ fontSize: "12px" }}>Recommended</p>
-            
           </div>
           <div className="centergooglelogin">
             <GoogleLogin
-            theme="filled_black"
-            text="signin_with"
+              theme="filled_black"
+              text="signin_with"
               shape="pill"
               onSuccess={(credentialResponse) => {
                 console.log(credentialResponse.credential);
@@ -181,7 +160,7 @@ const login = () => {
                 console.log("Login Failed");
               }}
             />
-            </div>
+          </div>
 
           {signedin === "true" ? (
             <>

@@ -20,24 +20,33 @@ getgoogleuser(arg){
 }
 createuser(username0, password0){
    return http.post("/user", {
-    
+      
       username: username0,
       password: password0
     })
 }
-   stillSigned(){
+   stillSigned(token0){
   
-   return http.get("/checklogin",{
-      withCredentials : true,
-   })
+   return http.post("/checklogin",{
+    
+      token: token0
+    }
+   
+   )
       
    }
 
-   signOut(){
-    return http.post("/logout")
+   signOut(token0){
+    return http.post("/logout",{
+      token: token0
+
+    })
    }
-   getLiked(){
-      return http.get("/getliked")
+   getLiked(token0){
+      return http.post("/getliked",{
+
+         token: token0
+      })
    }
 
    googleLogin(jwt){
@@ -49,15 +58,17 @@ createuser(username0, password0){
          withCredentials : true,
       })
    }
-   liked(additem){
+   liked(additem,token){
 return http.put("/addliked", {
-   additem: additem
+   additem: additem,
+   token: token
 })
    }
 
-   unliked(removeitem){
+   unliked(removeitem,token){
       return http.put("/removeliked", {
-         removeitem: removeitem
+         removeitem: removeitem,
+         token: token
       })
          }
    //http.get(`${sub}`);

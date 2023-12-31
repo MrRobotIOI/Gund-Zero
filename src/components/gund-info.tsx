@@ -36,7 +36,7 @@ const GundInfo = (props: any) => {
   }, []);
   useEffect(() => {
     // console.log(params)
-    UserDataService.getLiked().then((response) => {
+    UserDataService.getLiked(sessionStorage.getItem("token")).then((response) => {
       response.data.map((gu: LooseObject) => {
         if (gu.name === name) {
           setLiked(true);
@@ -66,7 +66,7 @@ const GundInfo = (props: any) => {
   };
 
   const like = (id: string) => {
-    UserDataService.liked(id)
+    UserDataService.liked(id,sessionStorage.getItem("token"))
       .then((response) => {
         setLiked(true);
       })
@@ -76,7 +76,7 @@ const GundInfo = (props: any) => {
   };
 
   const unlike = (id: string) => {
-    UserDataService.unliked(id)
+    UserDataService.unliked(id,sessionStorage.getItem("token"))
       .then((response) => {
        
         setLiked(false);

@@ -32,10 +32,10 @@ const Favourites = () => {
   useEffect(() => {
     setLoading(true);
     
-    UserDataService.stillSigned()
+    UserDataService.stillSigned(sessionStorage.getItem("token"))
     .then((response) => {
       setSignedIn(1)
-    UserDataService.getLiked()
+    UserDataService.getLiked(sessionStorage.getItem("token"))
     .then((response) =>{
       setLoading(false);
       setGundams(response.data)
@@ -126,7 +126,7 @@ const Favourites = () => {
         ) : (
           <p style={{textAlign: "center",lineHeight: "400px", color:"white"}}>
                 
-                <Link to={"/login"}>Sign in </Link> for favourites
+                <Link to={"/login"}>Sign in</Link> for favourites
           </p>
           
         )}

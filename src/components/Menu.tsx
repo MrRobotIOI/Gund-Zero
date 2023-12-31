@@ -17,32 +17,28 @@ const Menu = ({ menusignedin}: Props) => {
     document.getElementById("mySidenav")!.style.width = "0";
   }
   useEffect(() => {
-    UserDataService.stillSigned()
+    UserDataService.stillSigned(sessionStorage.getItem("token"))
       .then((response) => {
-        console.log("STILLDIGNED:\n" + response.data);
-        setisuserEmpty(1)
+        
+        console.log(response.data)
+        sessionStorage.setItem("token",response.data.token)
+        setisuserEmpty(0)
       })
       .catch((e) => {
-        setisuserEmpty(1);
-        user?.setUser({});
-        console.log("STILLDIGNED:\n" + e);
-        localStorage.setItem("signedin", "false");
-        localStorage.setItem("userData", "{}");
+        console.log(response.data)
+  sessionStorage.removeItem("token")
+        setisuserEmpty(1)
       });
   }, []);
   function handleSignOut() {
-    UserDataService.signOut()
+    console.log("signOut()");
+    UserDataService.signOut(sessionStorage.getItem("token"))
       .then((response) => {
-        console.log("signOut()");
-        console.log(response.data);
-        user?.setUser({});
+        
         setisuserEmpty(1)
-        /*
-        localStorage.setItem("signedin", "false");
-        localStorage.setItem("userData", "{}");
-        */
+        sessionStorage.removeItem("token")
         window.location.reload();
-        // Handle data
+     
       })
       .catch((e) => {
         console.log("signOut() error");

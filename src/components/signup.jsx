@@ -35,9 +35,9 @@ const login = () => {
   useEffect(() => {
     setLoading(true);
     
-    UserDataService.stillSigned()
+    UserDataService.stillSigned(sessionStorage.getItem("token"))
       .then((response) => {
-        console.log("stillSigned()");
+       sessionStorage.setItem("token", response.data.token)
         setLoading(false);
         console.log(response.data);
         setSignedIn("true")
@@ -45,9 +45,9 @@ const login = () => {
       })
       .catch((e) => {
         console.log(e);
-        console.log("Session Unavailable");
-        UserDataService.signOut();
-        user?.setUser({});
+    
+        
+    
         setLoading(false);
         setSignedIn("false");
       });
@@ -75,27 +75,18 @@ const login = () => {
     setLoading(true);
     UserDataService.createuser(username, password)
       .then((response) => {
-        console.log("createuser() " + response.data);
+       
         UserDataService.auth(username, password)
           .then((response) => {
-            console.log("login() " + response.data);
+          
+            sessionStorage.setItem("token", response.data.token)
+            setLoading(false);
+            
+            
+            setSignedIn("true");
+            navigate(-1);
 
-            http
-              .get("/username/" + `${username}`)
-              .then((response) => {
-                console.log("Succeseful login");
-                setLoading(false);
-                localStorage.setItem("username", "");
-                
-                setSignedIn("true");
-                navigate(-1);
-              })
-              .catch((e) => {
-                setLoading(false);
-                setSignedIn("false")
-                console.log(e);
-                setErrMsg("Wrong Username or Password");
-              });
+          
           })
           .catch((error) => {
             setLoading(false);
@@ -127,7 +118,7 @@ const login = () => {
         setSignedIn("true");
         setErrMsg("Authenticated");
         navigate(-1);
-        console.log(response);
+        sessionStorage.setItem("token", response.data.token);
       })
       .catch((error) => {
         setLoading(false);
