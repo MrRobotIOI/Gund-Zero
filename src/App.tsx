@@ -9,6 +9,7 @@ import Login from "./components/login";
 import Favourites from "./components/Favourites";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from "react";
 
 function App() {

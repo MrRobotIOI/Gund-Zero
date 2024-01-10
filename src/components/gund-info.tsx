@@ -1,5 +1,5 @@
 import Alert from "./Alert";
-import Button from "./Button";
+import Buttoncustom from "./Button";
 import Button2 from "./Button2";
 import Card from "./Card";
 import React, { useState, useEffect } from "react";
@@ -13,6 +13,8 @@ import Menu from "./Menu";
 import Heartfill from "../svg/heartpulse_fill";
 import Heart from "../svg/heartpulse";
 import { ClimbingBoxLoader, ClipLoader } from "react-spinners";
+import { Button, OverlayTrigger, Popover } from "react-bootstrap";
+
 interface LooseObject {
   _id: string;
   name: string;
@@ -25,7 +27,7 @@ interface LooseObject {
 const GundInfo = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [liked, setLiked] = useState(false);
-
+  const [signedin, setSignedin] = useState(false);
   const [gundams, setGundams] = useState([]);
   const [searchName, setSearchName] = useState("");
   const params = useParams();
@@ -36,12 +38,20 @@ const GundInfo = (props: any) => {
   }, []);
   useEffect(() => {
     // console.log(params)
-    UserDataService.getLiked(sessionStorage.getItem("token")).then((response) => {
-      response.data.map((gu: LooseObject) => {
-        if (gu.name === name) {
-          setLiked(true);
-        }
-      });
+    UserDataService.getLiked(sessionStorage.getItem("token")).then(
+      (response) => {
+
+        response.data.map((gu: LooseObject) => {
+          if (gu.name === name) {
+            setLiked(true);
+          }
+        });
+        setSignedin(true)
+      }
+    )
+    
+    .catch((e)=>{
+      setSignedin(false)
     });
   }, []);
   useEffect(() => {
@@ -64,30 +74,63 @@ const GundInfo = (props: any) => {
         console.log(e);
       });
   };
-
+  const popoverStyle = {
+    backgroundColor: "#212529e0", // Set your desired background color
+    color: "#eb3983", // Set your desired text color
+    borderColor: "#212529e0",
+    borderWidth: "2px",
+    fontSize: "10px",
+    width: "120px",
+    padding: "2px",
+  };
+  const popoverStyle2 = {
+    color: "#eb3983", // Set your desired text color
+  };
+  const popover = (
+    <Popover id="popover-basic" style={popoverStyle} arrowProps={popoverStyle2}>
+      <Popover.Header as="p" style={{ color: "#fff" }}></Popover.Header>
+      <Popover.Body style={{ color: "#fff"}}>
+        Sign in to add to favourites
+      </Popover.Body>
+    </Popover>
+  );
   const like = (id: string) => {
-    UserDataService.liked(id,sessionStorage.getItem("token"))
+    UserDataService.liked(id, sessionStorage.getItem("token"))
       .then((response) => {
         setLiked(true);
       })
       .catch((e) => {
         console.log(e);
+        //sign out and reload page
       });
   };
+  function handleSignOut() {
+    console.log("signOut()");
 
-  const unlike = (id: string) => {
-    UserDataService.unliked(id,sessionStorage.getItem("token"))
+    UserDataService.signOut(sessionStorage.getItem("token"))
       .then((response) => {
-       
+        setLiked(false);
+        sessionStorage.removeItem("token");
+        window.location.reload();
+      })
+      .catch((e) => {
+        console.log("signOut() error");
+        console.log(e);
+      });
+  }
+  const unlike = (id: string) => {
+    UserDataService.unliked(id, sessionStorage.getItem("token"))
+      .then((response) => {
         setLiked(false);
       })
       .catch((e) => {
         console.log(e);
       });
   };
+
   return (
     <>
-      <Menu menusignedin = {0}></Menu>
+      <Menu menusignedin={0}></Menu>
       <div key={name?.length} className="infobg">
         {loading ? (
           <div>
@@ -118,19 +161,52 @@ const GundInfo = (props: any) => {
                       <div className="text-center" style={{ maxWidth: "90%" }}>
                         <div className="shadowglow rounded bg-transparent  mb-3 p-3 infoimg">
                           <div className="img-overlay-wrap">
+                          { !signedin ? (
+                            <OverlayTrigger
+                              trigger={["hover", "focus"]}
+                              placement="right"
+                              overlay={popover}
+                            >
+                            
+                              <div>
+                                {liked ? (
+                                  <Heartfill
+                                    onClick={() => {
+                                      unlike(gundam._id);
+                                    }}
+                                  ></Heartfill>
+                                ) : (
+                                  <>
+                                    <Heart
+                                      onClick={() => {
+                                        like(gundam._id);
+                                      }}
+                                    ></Heart>
+                                  </>
+                                )}
+                              </div>
+                              
+                            </OverlayTrigger>
+                          )
+                         :(
                             <div>
-                              {liked ? (
-                                <Heartfill  onClick={() => {
+                            {liked ? (
+                              <Heartfill
+                                onClick={() => {
                                   unlike(gundam._id);
-                                }}></Heartfill>
-                              ) : (
+                                }}
+                              ></Heartfill>
+                            ) : (
+                              <>
                                 <Heart
                                   onClick={() => {
                                     like(gundam._id);
                                   }}
                                 ></Heart>
-                              )}
-                            </div>
+                              </>
+                            )}
+                          </div>
+                         )}
                             <img
                               src={gundam.img}
                               className="img-fluid rounded mb-3" /*alt="..."*/
@@ -262,6 +338,7 @@ const GundInfo = (props: any) => {
             );
           }
         })}
+
         <footer>
           <Footer></Footer>
         </footer>

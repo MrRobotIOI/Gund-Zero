@@ -128,7 +128,12 @@ const GundamsList = (props: any) => {
             <div>
               <p style={{ maxWidth: "100%", marginTop: "10px" }} id="showMe">
                 {" "}
-                Please reload page or wait 2-3 minutes
+                Spinning up Server 
+       
+               
+              </p>
+              <p style={{ maxWidth: "100%", marginTop: "10px" }} id="showMe">
+              Please reload page or wait 2-3 minutes
               </p>
             </div>
           </div>

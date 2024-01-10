@@ -20,7 +20,7 @@ const Menu = ({ menusignedin}: Props) => {
     UserDataService.stillSigned(sessionStorage.getItem("token"))
       .then((response) => {
         
-        console.log(response.data)
+        //console.log(response.data)
         sessionStorage.setItem("token",response.data.token)
         setisuserEmpty(0)
       })
@@ -32,6 +32,7 @@ const Menu = ({ menusignedin}: Props) => {
   }, []);
   function handleSignOut() {
     console.log("signOut()");
+    setisuserEmpty(1)
     UserDataService.signOut(sessionStorage.getItem("token"))
       .then((response) => {
         

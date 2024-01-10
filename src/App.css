@@ -9,7 +9,25 @@
 .toggler {
   display: inline-block;
 }
+.custom-popover {
+  --bs-popover-max-width: 200px;
+  --bs-popover-border-color: var(--bd-violet-bg);
+  --bs-popover-header-bg: var(--bd-violet-bg);
+  --bs-popover-header-color: var(--bs-white);
+  --bs-popover-body-padding-x: 1rem;
+  --bs-popover-body-padding-y: .5rem;
+}
 
+
+.bs-popover-end > .popover-arrow::after, .bs-popover-auto[data-popper-placement^=right] > .popover-arrow::after {
+    left: var(--bs-popover-border-width);
+    border-right-color: #252525 !important; 
+}
+.popover-body {
+
+  padding: 2px !important; 
+  padding-left: 12px !important;
+}
 body {
 
  

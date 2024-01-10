@@ -66,7 +66,7 @@ const Favourites = () => {
 
   return (
     <>
-    <Menu></Menu>
+    <Menu ></Menu>
     {loading ? (
           <div>
             <div style={{ paddingLeft: "48%", marginTop: "40px" }}>
